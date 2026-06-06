@@ -1,8 +1,7 @@
 <?php
 
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
-Route::get('/user', function (Request $request) {
-    return $request->user();
-})->middleware('auth:sanctum');
+foreach (glob(base_path('routes/api/v1/*.php')) as $routeFile) {
+    Route::prefix('v1')->group($routeFile);
+}
