@@ -38,5 +38,6 @@ class DatabaseSeeder extends Seeder
             'email' => 'student@example.com',
             'role' => 'student',
         ]);
+        $this->call(TagSeeder::class);
     }
 }
