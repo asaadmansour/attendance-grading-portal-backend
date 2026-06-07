@@ -27,7 +27,7 @@ class AuthController extends Controller
             ...$request->validated(),
             'created_by' => $request->user()->id,
         ]);
-        return response()->json(['message' => 'registered'],201);
+        return response()->json(['message' => 'registered',$user],201);
     }
     public function refresh(Request $request)
     {
