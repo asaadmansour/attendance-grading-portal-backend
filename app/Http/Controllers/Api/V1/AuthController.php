@@ -23,7 +23,10 @@ class AuthController extends Controller
         return response()->json(['token' => $token]);
     }
     public function register(RegisterRequest $request) {
-        $user = User::create($request->validated());
+        $user = User::create([
+            ...$request->validated(),
+            'created_by' => $request->user()->id,
+        ]);
         return response()->json(['message' => 'registered'],201);
     }
     public function refresh(Request $request)
