@@ -9,12 +9,14 @@ use Tests\TestCase;
 
 class AnnouncementPolicyTest extends TestCase
 {
-    public function test_branch_manager_and_track_admin_can_create(): void
+    public function test_branch_manager_can_create(): void
     {
-        $policy = app(AnnouncementPolicy::class);
+        $this->assertTrue(app(AnnouncementPolicy::class)->create(new User(['role' => 'branch_manager'])));
+    }
 
-        $this->assertTrue($policy->create(new User(['role' => 'branch_manager'])));
-        $this->assertTrue($policy->create(new User(['role' => 'track_admin'])));
+    public function test_track_admin_can_create(): void
+    {
+        $this->assertTrue(app(AnnouncementPolicy::class)->create(new User(['role' => 'track_admin'])));
     }
 
     public function test_student_cannot_create(): void
