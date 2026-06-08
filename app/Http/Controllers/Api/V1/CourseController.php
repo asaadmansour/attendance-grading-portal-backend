@@ -29,9 +29,10 @@ class CourseController extends Controller
     {
         abort_unless($cohort->isManagedBy($request->user()), 403, 'Forbidden');
 
+        // courses are always out of 100
         $course = $cohort->courses()->create([
             'name' => $request->name,
-            'total_points' => $request->total_points,
+            'total_points' => 100,
         ]);
 
         $course->components()->createMany($request->input('components'));
@@ -43,7 +44,7 @@ class CourseController extends Controller
     {
         abort_unless($course->cohort->isManagedBy($request->user()), 403, 'Forbidden');
 
-        $course->update($request->only('name', 'total_points'));
+        $course->update($request->only('name'));
 
         // swap the whole component set if a new one was sent
         if ($request->has('components')) {

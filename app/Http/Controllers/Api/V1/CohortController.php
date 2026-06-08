@@ -34,7 +34,7 @@ class CohortController extends Controller
         $cohort = Cohort::create([
             'track_id' => $request->track_id,
             'name' => $request->name,
-            'status' => 'active',
+            'status' => $request->input('status', 'active'),
             'created_by' => $request->user()->id,
         ]);
 

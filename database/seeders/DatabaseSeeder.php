@@ -31,6 +31,8 @@ class DatabaseSeeder extends Seeder
             TrackSeeder::class,
             CohortSeeder::class,
             CourseSeeder::class,
+            LabGroupSeeder::class,
+            EnrollmentSeeder::class,
             EngagementSeeder::class,
         ]);
 

@@ -3,13 +3,15 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 class UpdateEngagementRequest extends FormRequest
 {
     public function rules(): array
     {
         return [
-            'instructor_id' => 'sometimes|exists:users,id',
+            // only people who actually teach can be booked: instructors and TAs
+            'instructor_id' => ['sometimes', Rule::exists('users', 'id')->whereIn('role', ['instructor', 'track_admin'])],
             'engagement_type' => 'sometimes|in:lecture,lab,business',
             'start_date' => 'sometimes|date',
             'end_date' => 'sometimes|date',

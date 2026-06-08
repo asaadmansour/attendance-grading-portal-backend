@@ -12,6 +12,8 @@ class UpdateLabGroupRequest extends FormRequest
             'name' => 'sometimes|string|max:255',
             'instructor_id' => 'sometimes|exists:users,id',
             'capacity' => 'sometimes|integer|min:1|max:50',
+            'student_ids' => 'sometimes|array',
+            'student_ids.*' => 'exists:users,id',
         ];
     }
 }

@@ -12,6 +12,8 @@ class StoreLabGroupRequest extends FormRequest
             'name' => 'required|string|max:255',
             'instructor_id' => 'required|exists:users,id',
             'capacity' => 'sometimes|integer|min:1|max:50',
+            'student_ids' => 'sometimes|array',
+            'student_ids.*' => 'exists:users,id',
         ];
     }
 }
