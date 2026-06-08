@@ -82,6 +82,15 @@ class AnnouncementFeedTest extends TestCase
             ->assertJsonPath('data.title', 'Hello');
     }
 
+    public function test_view_missing_announcement_returns_404_envelope(): void
+    {
+        Sanctum::actingAs(User::factory()->create(['role' => 'student']));
+
+        $this->getJson('/api/v1/announcements/999999')
+            ->assertStatus(404)
+            ->assertJsonPath('success', false);
+    }
+
     private function seedTwoDatedAnnouncements(): void
     {
         Announcement::factory()->create(['title' => 'older'])
