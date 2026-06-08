@@ -38,5 +38,7 @@ class DatabaseSeeder extends Seeder
             'email' => 'student@example.com',
             'role' => 'student',
         ]);
+
+        $this->call(AnnouncementSeeder::class);
     }
 }
