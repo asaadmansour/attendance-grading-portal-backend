@@ -53,6 +53,11 @@ class User extends Authenticatable
         return $this->hasMany(User::class, 'created_by');
     }
 
+    public function engagements()
+    {
+        return $this->hasMany(Engagement::class, 'instructor_id');
+    }
+
     protected function casts(): array
     {
         return [
