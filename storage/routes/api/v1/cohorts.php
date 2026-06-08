@@ -28,4 +28,8 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::patch('/lab-groups/{labGroup}', [LabGroupController::class, 'update']);
         Route::delete('/lab-groups/{labGroup}', [LabGroupController::class, 'destroy']);
     });
+
+    // an instructor sees the groups they teach (with rosters); a student sees their own
+    Route::get('/my/lab-groups', [LabGroupController::class, 'mine'])->middleware('role:instructor');
+    Route::get('/my/lab-group', [LabGroupController::class, 'myGroup'])->middleware('role:student');
 });

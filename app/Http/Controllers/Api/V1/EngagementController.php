@@ -7,17 +7,27 @@ use App\Http\Requests\StoreEngagementRequest;
 use App\Http\Requests\UpdateEngagementRequest;
 use App\Models\Engagement;
 use App\Models\User;
+use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 
 class EngagementController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        return $this->ok(Engagement::with('instructor')->get());
+        $query = Engagement::with('instructor');
+
+        // a TA only sees engagements in their own cohorts; the BM sees the lot
+        if ($request->user()->role === 'track_admin') {
+            $query->whereHas('cohort.tas', fn ($q) => $q->whereKey($request->user()->id));
+        }
+
+        return $this->ok($query->get());
     }
 
-    public function show(Engagement $engagement)
+    public function show(Request $request, Engagement $engagement)
     {
+        $this->authorizeAccess($request, $engagement);
+
         return $this->ok($engagement->load('instructor'));
     }
 
@@ -30,13 +40,17 @@ class EngagementController extends Controller
 
     public function update(UpdateEngagementRequest $request, Engagement $engagement)
     {
+        $this->authorizeAccess($request, $engagement);
+
         $engagement->update($request->validated());
 
         return $this->ok($engagement, 'Engagement updated');
     }
 
-    public function destroy(Engagement $engagement)
+    public function destroy(Request $request, Engagement $engagement)
     {
+        $this->authorizeAccess($request, $engagement);
+
         $engagement->delete();
 
         return $this->ok(null, 'Engagement deleted');
@@ -53,5 +67,17 @@ class EngagementController extends Controller
             'start' => $start ? Carbon::parse($start)->toDateString() : null,
             'end' => $end ? Carbon::parse($end)->toDateString() : null,
         ]);
+    }
+
+    // the BM can touch any engagement, a TA only the ones in cohorts they run
+    private function authorizeAccess(Request $request, Engagement $engagement): void
+    {
+        $user = $request->user();
+
+        abort_unless(
+            $user->role === 'branch_manager' || $engagement->cohort?->isManagedBy($user),
+            403,
+            'Forbidden'
+        );
     }
 }

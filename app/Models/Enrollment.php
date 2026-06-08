@@ -12,5 +12,11 @@ class Enrollment extends Model
     protected $fillable = [
         'student_id',
         'cohort_id',
+        'lab_group_id',
     ];
+
+    public function labGroup()
+    {
+        return $this->belongsTo(LabGroup::class);
+    }
 }
