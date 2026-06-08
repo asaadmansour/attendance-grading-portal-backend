@@ -11,7 +11,10 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
-        //
+        $this->app->bind(
+            \App\Support\Engagement\EngagementWindow::class,
+            \App\Support\Engagement\NullEngagementWindow::class,
+        );
     }
 
     /**
