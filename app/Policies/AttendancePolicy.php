@@ -17,7 +17,7 @@ class AttendancePolicy
         }
 
         if ($user->role === 'instructor') {
-            return $session->engagement->instructor_id === $user->id;
+            return true;
         }
 
         return true;

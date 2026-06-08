@@ -9,11 +9,11 @@ class SessionFactory extends Factory
     public function definition(): array
     {
         return [
-            'user_id' => \App\Models\User::factory(),
-            'ip_address' => $this->faker->ipv4(),
-            'user_agent' => $this->faker->userAgent(),
-            'payload' => json_encode([]),
-            'last_activity' => now()->timestamp,
+            'engagement_id' => \App\Models\Engagement::factory(),
+            'session_date' => now()->toDateString(),
+            'scheduled_hours' => $this->faker->randomFloat(2, 1, 8),
+            'delivered_hours' => 0,
+            'is_delivered' => false,
         ];
     }
 }

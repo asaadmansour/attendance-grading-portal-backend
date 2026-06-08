@@ -21,15 +21,6 @@ return new class extends Migration
                 $table->boolean('is_delivered')->default(false);
                 $table->timestamps();
             });
-        } else {
-            Schema::table('training_sessions', function (Blueprint $table) {
-                if (!Schema::hasColumn('training_sessions', 'is_delivered')) {
-                    $table->boolean('is_delivered')->default(false);
-                }
-                if (!Schema::hasColumn('training_sessions', 'created_at')) {
-                    $table->timestamps();
-                }
-            });
         }
     }
 
@@ -38,15 +29,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        if (Schema::hasTable('training_sessions')) {
-            Schema::table('training_sessions', function (Blueprint $table) {
-                if (Schema::hasColumn('training_sessions', 'is_delivered')) {
-                    $table->dropColumn('is_delivered');
-                }
-                if (Schema::hasColumn('training_sessions', 'created_at')) {
-                    $table->dropTimestamps();
-                }
-            });
-        }
+        Schema::dropIfExists('training_sessions');
     }
 };
