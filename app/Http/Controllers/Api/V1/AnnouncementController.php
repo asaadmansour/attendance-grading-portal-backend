@@ -12,7 +12,7 @@ class AnnouncementController extends Controller
     public function index(Request $request)
     {
         $perPage = min(max((int) $request->integer('per_page', 15), 1), 100);
-        $direction = $request->query('sort') === 'created_at' ? 'asc' : 'desc';
+        $direction = $request->query('sort') === 'oldest' ? 'asc' : 'desc';
 
         $announcements = Announcement::query()
             ->with('author:id,name')
