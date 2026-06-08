@@ -39,5 +39,6 @@ class DatabaseSeeder extends Seeder
             'role' => 'student',
         ]);
         $this->call(TagSeeder::class);
+        $this->call(StudentNoteSeeder::class);
     }
 }

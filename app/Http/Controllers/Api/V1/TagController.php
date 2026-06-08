@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Tag;
 use App\Http\Requests\StoreTagRequest;
+use App\Http\Requests\UpdateTagRequest;
 
 class TagController extends Controller
 {
@@ -47,7 +48,7 @@ class TagController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(StoreTagRequest $request, string $id)
+    public function update(UpdateTagRequest $request, string $id)
     {
         $tag = Tag::findOrFail($id);
         
