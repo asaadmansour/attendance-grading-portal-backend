@@ -20,5 +20,6 @@ class AnnouncementSeederTest extends TestCase
 
         $this->assertNotNull($author);
         $this->assertSame(3, Announcement::where('author_id', $author->id)->count());
+        $this->assertSame(3, Announcement::count());
     }
 }
