@@ -21,7 +21,10 @@ class User extends Authenticatable
     protected $fillable = [
         'name',
         'email',
+        'role',
+        'expires_at',
         'password',
+        'created_by',
     ];
 
     /**
@@ -31,6 +34,7 @@ class User extends Authenticatable
      */
     protected $hidden = [
         'password',
+        'expires_at',
         'remember_token',
     ];
 
@@ -39,10 +43,21 @@ class User extends Authenticatable
      *
      * @return array<string, string>
      */
+    public function creator()
+    {
+        return $this->belongsTo(User::class, 'created_by');
+    }
+
+    public function createdUsers()
+    {
+        return $this->hasMany(User::class, 'created_by');
+    }
+
     protected function casts(): array
     {
         return [
             'email_verified_at' => 'datetime',
+            'expires_at' => 'datetime',
             'password' => 'hashed',
         ];
     }

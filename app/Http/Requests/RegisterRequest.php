@@ -3,7 +3,9 @@
 namespace App\Http\Requests;
 
 use Illuminate\Contracts\Validation\ValidationRule;
+use App\Enums\UserRole;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rules\Enum;
 
 class RegisterRequest extends FormRequest
 {
@@ -12,7 +14,10 @@ class RegisterRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return true;
+        $callerRole = UserRole::from($this->user()->role);
+        $targetRole = UserRole::tryFrom($this->input('role'));
+
+        return $targetRole && in_array($targetRole, $callerRole->canCreate());
     }
 
     /**
@@ -25,6 +30,8 @@ class RegisterRequest extends FormRequest
         return [
             'name' => 'required|string|max:255',
             'email' => 'required|email|unique:users,email',
+            'role' => ['required', new Enum(UserRole::class)],
+            'expires_at' => 'nullable|date|after:now',
             'password' => 'required|string|min:8|confirmed',
         ];
     }
