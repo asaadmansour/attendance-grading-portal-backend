@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class Announcement extends Model
 {
+    /** @use HasFactory<\Database\Factories\AnnouncementFactory> */
     use HasFactory;
 
     protected $fillable = ['title', 'body'];
