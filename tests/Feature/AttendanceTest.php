@@ -41,7 +41,7 @@ class AttendanceTest extends TestCase
     }
 
     
-    public function instructor_can_check_in_a_student(): void
+    public function test_instructor_can_check_in_a_student(): void
     {
         $response = $this->actingAs($this->instructor)
             ->postJson("/api/sessions/{$this->session->id}/check-in", [
@@ -65,7 +65,7 @@ class AttendanceTest extends TestCase
         );
     }
 
-    public function check_in_is_idempotent_second_scan_does_not_overwrite_arrived_at(): void
+    public function test_check_in_is_idempotent_second_scan_does_not_overwrite_arrived_at(): void
     {
         $this->actingAs($this->instructor)
             ->postJson("/api/sessions/{$this->session->id}/check-in", [
@@ -90,7 +90,7 @@ class AttendanceTest extends TestCase
         $this->assertEquals($first, $second);
     }
 
-    public function student_cannot_check_in_others(): void
+    public function test_student_cannot_check_in_others(): void
     {
         $other = User::factory()->create(['role' => 'student']);
 
@@ -101,7 +101,7 @@ class AttendanceTest extends TestCase
             ->assertForbidden();
     }
 
-    public function check_out_marks_student_present_and_does_not_deduct_ledger(): void
+    public function test_check_out_marks_student_present_and_does_not_deduct_ledger(): void
     {
         $this->actingAs($this->instructor)
             ->postJson("/api/sessions/{$this->session->id}/check-in", [
@@ -121,7 +121,7 @@ class AttendanceTest extends TestCase
         ]);
     }
 
-    public function reconcile_deducts_25_for_unexcused_absent_student(): void
+    public function test_reconcile_deducts_25_for_unexcused_absent_student(): void
     {
         $ta = User::factory()->create(['role' => 'track_admin']);
 
@@ -135,7 +135,7 @@ class AttendanceTest extends TestCase
         ]);
     }
 
-    public function reconcile_deducts_only_5_when_excuse_is_already_approved(): void
+    public function test_reconcile_deducts_only_5_when_excuse_is_already_approved(): void
     {
         $ta = User::factory()->create(['role' => 'track_admin']);
 
