@@ -1,0 +1,1502 @@
+{
+  "info": {
+    "_postman_id": "iti-attendance-grading-portal",
+    "name": "ITI Attendance & Grading API",
+    "description": "Full API collection for the ITI Attendance & Grading Platform.\n\nGetting started:\n1. Set the `base_url` variable (default http://127.0.0.1:8000/api/v1).\n2. Run Auth > Login. The token is captured automatically into the `token` variable.\n3. Every other request inherits the bearer token from the collection.\n\nAll requests send `Accept: application/json`. Path ids (1, 2, ...) are example values; adjust to your seeded data.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "auth": {
+    "type": "bearer",
+    "bearer": [
+      {
+        "key": "token",
+        "value": "{{token}}",
+        "type": "string"
+      }
+    ]
+  },
+  "variable": [
+    {
+      "key": "base_url",
+      "value": "http://127.0.0.1:8000/api/v1",
+      "type": "string"
+    },
+    {
+      "key": "token",
+      "value": "",
+      "type": "string"
+    }
+  ],
+  "item": [
+    {
+      "name": "Auth",
+      "item": [
+        {
+          "name": "Login",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"bm@example.com\",\n  \"password\": \"password\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/auth/login",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "auth",
+                "login"
+              ]
+            },
+            "auth": {
+              "type": "noauth"
+            },
+            "description": "Public. Returns a bearer token (captured into {{token}}) and the user."
+          },
+          "response": [],
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "var data = pm.response.json();",
+                  "if (data && data.token) {",
+                  "    pm.collectionVariables.set('token', data.token);",
+                  "    console.log('Saved bearer token to collection variable.');",
+                  "}"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Register",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"New Track Admin\",\n  \"email\": \"newadmin@example.com\",\n  \"role\": \"track_admin\",\n  \"password\": \"password123\",\n  \"password_confirmation\": \"password123\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/auth/register",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "auth",
+                "register"
+              ]
+            },
+            "description": "Branch Manager or Track Admin only. Provisions a new account."
+          },
+          "response": []
+        },
+        {
+          "name": "Refresh Token",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/auth/refresh",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "auth",
+                "refresh"
+              ]
+            },
+            "description": "Any authenticated user. Rotates the current token (new token captured into {{token}})."
+          },
+          "response": [],
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "var data = pm.response.json();",
+                  "if (data && data.token) {",
+                  "    pm.collectionVariables.set('token', data.token);",
+                  "    console.log('Saved bearer token to collection variable.');",
+                  "}"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Logout",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/auth/logout",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "auth",
+                "logout"
+              ]
+            },
+            "description": "Any authenticated user. Revokes the current token."
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "System",
+      "item": [
+        {
+          "name": "Health Check",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/ping",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "ping"
+              ]
+            },
+            "auth": {
+              "type": "noauth"
+            },
+            "description": "Public health check. No auth required."
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Cohorts",
+      "item": [
+        {
+          "name": "Get all Cohorts",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/cohorts",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "cohorts"
+              ]
+            },
+            "description": "BM sees all; Track Admin sees only their assigned cohorts."
+          },
+          "response": []
+        },
+        {
+          "name": "Get Cohort",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/cohorts/1",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "cohorts",
+                "1"
+              ]
+            },
+            "description": "Full detail with track, TAs, courses + components, lab groups."
+          },
+          "response": []
+        },
+        {
+          "name": "Add Cohort",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"track_id\": 2,\n  \"name\": \"Web Intake 46\",\n  \"status\": \"active\",\n  \"ta_ids\": [\n    2\n  ]\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/cohorts",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "cohorts"
+              ]
+            },
+            "description": "Branch Manager only. status is optional (planned/active/completed, default active). Only one active cohort per track is allowed."
+          },
+          "response": []
+        },
+        {
+          "name": "Update Cohort",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"status\": \"completed\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/cohorts/1",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "cohorts",
+                "1"
+              ]
+            },
+            "description": "Branch Manager only. Update name and/or status. Activating a cohort while the track already has an active one returns 422."
+          },
+          "response": []
+        },
+        {
+          "name": "Delete Cohort",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/cohorts/2",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "cohorts",
+                "2"
+              ]
+            },
+            "description": "Branch Manager only."
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Courses",
+      "item": [
+        {
+          "name": "Get all Courses",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/cohorts/1/courses",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "cohorts",
+                "1",
+                "courses"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Course",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/courses/1",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "courses",
+                "1"
+              ]
+            },
+            "description": "Course detail with components."
+          },
+          "response": []
+        },
+        {
+          "name": "Add Course",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"PHP Laravel\",\n  \"components\": [\n    {\n      \"component_type\": \"lab\",\n      \"weight\": 40,\n      \"raw_max\": 70\n    },\n    {\n      \"component_type\": \"exam\",\n      \"weight\": 60,\n      \"raw_max\": 100\n    }\n  ]\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/cohorts/1/courses",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "cohorts",
+                "1",
+                "courses"
+              ]
+            },
+            "description": "BM or assigned Track Admin. Course is scored out of 100; component weights must total 100."
+          },
+          "response": []
+        },
+        {
+          "name": "Update Course",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"PHP Laravel v2\",\n  \"components\": [\n    {\n      \"component_type\": \"project\",\n      \"weight\": 100,\n      \"raw_max\": 100\n    }\n  ]\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/courses/1",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "courses",
+                "1"
+              ]
+            },
+            "description": "Sending components replaces the full set; their weights must total 100."
+          },
+          "response": []
+        },
+        {
+          "name": "Delete Course",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/courses/1",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "courses",
+                "1"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Lab groups",
+      "item": [
+        {
+          "name": "Get Lab groups",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/cohorts/1/lab-groups",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "cohorts",
+                "1",
+                "lab-groups"
+              ]
+            },
+            "description": "Lists the cohort's lab groups, each with its roster."
+          },
+          "response": []
+        },
+        {
+          "name": "Add Lab group",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Lab A\",\n  \"instructor_id\": 3,\n  \"capacity\": 15,\n  \"student_ids\": [\n    4,\n    5\n  ]\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/cohorts/1/lab-groups",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "cohorts",
+                "1",
+                "lab-groups"
+              ]
+            },
+            "description": "BM or assigned Track Admin. student_ids (optional) fills the roster (only students enrolled in this cohort are added)."
+          },
+          "response": []
+        },
+        {
+          "name": "Get Lab group",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/lab-groups/1",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "lab-groups",
+                "1"
+              ]
+            },
+            "description": "Lab group detail with roster."
+          },
+          "response": []
+        },
+        {
+          "name": "Update Lab group",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Lab A (morning)\",\n  \"capacity\": 12,\n  \"student_ids\": [\n    4,\n    5,\n    6\n  ]\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/lab-groups/1",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "lab-groups",
+                "1"
+              ]
+            },
+            "description": "Sending student_ids replaces the roster."
+          },
+          "response": []
+        },
+        {
+          "name": "Delete Lab-group",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/lab-groups/1",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "lab-groups",
+                "1"
+              ]
+            },
+            "description": "Releases the roster (students lose their group) then deletes the group."
+          },
+          "response": []
+        },
+        {
+          "name": "My Lab Groups (instructor)",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/my/lab-groups",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "my",
+                "lab-groups"
+              ]
+            },
+            "description": "Instructor only. The groups they teach, each with its roster."
+          },
+          "response": []
+        },
+        {
+          "name": "My Lab Group (student)",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/my/lab-group",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "my",
+                "lab-group"
+              ]
+            },
+            "description": "Student only. The group they are placed in."
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Engagement",
+      "item": [
+        {
+          "name": "Get all Engagements",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/engagements",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "engagements"
+              ]
+            },
+            "description": "BM sees all; Track Admin sees only engagements in cohorts they run."
+          },
+          "response": []
+        },
+        {
+          "name": "Get Engagement",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/engagements/2",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "engagements",
+                "2"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Add Engagement",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"instructor_id\": 3,\n  \"engagement_type\": \"lab\",\n  \"start_date\": \"2026-06-01\",\n  \"end_date\": \"2026-09-01\",\n  \"scheduled_hours_per_session\": 3\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/engagements",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "engagements"
+              ]
+            },
+            "description": "BM or Track Admin. instructor_id must be an instructor or track admin. engagement_type is lecture/lab/business."
+          },
+          "response": []
+        },
+        {
+          "name": "Update Engagement",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"scheduled_hours_per_session\": 4\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/engagements/1",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "engagements",
+                "1"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Delete Engagement",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/engagements/1",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "engagements",
+                "1"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Access Window",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/users/3/access-window",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "users",
+                "3",
+                "access-window"
+              ]
+            },
+            "description": "Any authenticated user. Earliest start to latest end across the user's engagements."
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Announcements",
+      "item": [
+        {
+          "name": "Get all Announcements",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/announcements?per_page=15&sort=newest",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "announcements"
+              ],
+              "query": [
+                {
+                  "key": "per_page",
+                  "value": "15"
+                },
+                {
+                  "key": "sort",
+                  "value": "newest"
+                }
+              ]
+            },
+            "description": "Any authenticated user. Paginated; sort=newest|oldest."
+          },
+          "response": []
+        },
+        {
+          "name": "Get Announcement",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/announcements/1",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "announcements",
+                "1"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Add Announcement",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"Welcome\",\n  \"body\": \"Classes start Sunday. Please arrive 15 minutes early.\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/announcements",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "announcements"
+              ]
+            },
+            "description": "Authenticated user. Creates an announcement authored by the caller."
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Tags",
+      "item": [
+        {
+          "name": "Get all Tags",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/tags",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "tags"
+              ]
+            },
+            "description": "Any authenticated user."
+          },
+          "response": []
+        },
+        {
+          "name": "Get Tag",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/tags/1",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "tags",
+                "1"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Add Tag",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"uses AI\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/tags",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "tags"
+              ]
+            },
+            "description": "Track Admin only. name must be unique."
+          },
+          "response": []
+        },
+        {
+          "name": "Update Tag",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"loves extra work\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/tags/1",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "tags",
+                "1"
+              ]
+            },
+            "description": "Track Admin only."
+          },
+          "response": []
+        },
+        {
+          "name": "Delete Tag",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/tags/1",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "tags",
+                "1"
+              ]
+            },
+            "description": "Track Admin only."
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Student Notes",
+      "item": [
+        {
+          "name": "Get Student Notes",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/students/4/notes",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "students",
+                "4",
+                "notes"
+              ]
+            },
+            "description": "Instructor or Track Admin. Notes on a given student."
+          },
+          "response": []
+        },
+        {
+          "name": "Add Student Note",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"body\": \"Great participation in lab this week.\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/students/4/notes",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "students",
+                "4",
+                "notes"
+              ]
+            },
+            "description": "Instructor or Track Admin. body is 5-250 chars."
+          },
+          "response": []
+        },
+        {
+          "name": "Delete Note",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/notes/1",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "notes",
+                "1"
+              ]
+            },
+            "description": "Instructor or Track Admin. Soft-deletes the note."
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Attendance",
+      "item": [
+        {
+          "name": "Check In",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"student_id\": 4\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/sessions/1/check-in",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "sessions",
+                "1",
+                "check-in"
+              ]
+            },
+            "description": "Records the student's arrival for the session."
+          },
+          "response": []
+        },
+        {
+          "name": "Check Out",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"student_id\": 4\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/sessions/1/check-out",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "sessions",
+                "1",
+                "check-out"
+              ]
+            },
+            "description": "Records departure and marks the student present."
+          },
+          "response": []
+        },
+        {
+          "name": "Reconcile Session",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/sessions/1/reconcile",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "sessions",
+                "1",
+                "reconcile"
+              ]
+            },
+            "description": "Finalizes the session: deducts points from students still marked absent."
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Excuses",
+      "item": [
+        {
+          "name": "Get all Excuses",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/excuses?per_page=20",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "excuses"
+              ],
+              "query": [
+                {
+                  "key": "per_page",
+                  "value": "20"
+                }
+              ]
+            },
+            "description": "Students see their own; staff see all. Paginated."
+          },
+          "response": []
+        },
+        {
+          "name": "Submit Excuse",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "attendance_id",
+                  "type": "text",
+                  "value": "1"
+                },
+                {
+                  "key": "reason",
+                  "type": "text",
+                  "value": "Was sick, see attached note."
+                },
+                {
+                  "key": "attachment",
+                  "type": "file",
+                  "src": []
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{base_url}}/excuses",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "excuses"
+              ]
+            },
+            "description": "Student submits an excuse for one of their own absences. attachment is optional (PDF or image, max 1 MB). Multipart form-data."
+          },
+          "response": []
+        },
+        {
+          "name": "Approve Excuse",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/excuses/1/approve",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "excuses",
+                "1",
+                "approve"
+              ]
+            },
+            "description": "Reviewer (TA). Approves a pending excuse; absence deduction drops from 25 to 5."
+          },
+          "response": []
+        },
+        {
+          "name": "Reject Excuse",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/excuses/1/reject",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "excuses",
+                "1",
+                "reject"
+              ]
+            },
+            "description": "Reviewer (TA). Rejects a pending excuse."
+          },
+          "response": []
+        },
+        {
+          "name": "Review Excuse",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"action\": \"approved\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/excuses/1",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "excuses",
+                "1"
+              ]
+            },
+            "description": "Reviewer (TA). action is approved or rejected."
+          },
+          "response": []
+        }
+      ]
+    }
+  ]
+}
