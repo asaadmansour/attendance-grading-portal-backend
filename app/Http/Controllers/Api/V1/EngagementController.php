@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreEngagementRequest;
 use App\Models\Engagement;
 use App\Models\User;
+use Illuminate\Support\Carbon;
 
 class EngagementController extends Controller
 {
@@ -19,10 +20,13 @@ class EngagementController extends Controller
     // a person's access window: earliest start to latest end across their engagements
     public function accessWindow(User $user)
     {
+        $start = $user->engagements()->min('start_date');
+        $end = $user->engagements()->max('end_date');
+
         return $this->ok([
             'user_id' => $user->id,
-            'start' => $user->engagements()->min('start_date'),
-            'end' => $user->engagements()->max('end_date'),
+            'start' => $start ? Carbon::parse($start)->toDateString() : null,
+            'end' => $end ? Carbon::parse($end)->toDateString() : null,
         ]);
     }
 }

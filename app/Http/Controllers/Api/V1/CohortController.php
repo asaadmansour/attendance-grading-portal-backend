@@ -24,10 +24,7 @@ class CohortController extends Controller
 
     public function show(Request $request, Cohort $cohort)
     {
-        if ($request->user()->role === 'track_admin'
-            && ! $cohort->tas()->whereKey($request->user()->id)->exists()) {
-            return $this->fail('Forbidden', 403);
-        }
+        abort_unless($cohort->isManagedBy($request->user()), 403, 'Forbidden');
 
         return $this->ok($cohort->load('track', 'tas', 'courses.components', 'labGroups.instructor'));
     }

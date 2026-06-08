@@ -38,4 +38,11 @@ class Cohort extends Model
     {
         return $this->belongsToMany(User::class, 'cohort_admins')->withTimestamps();
     }
+
+    // BM manages every cohort; a track admin only the ones they're assigned to
+    public function isManagedBy(User $user): bool
+    {
+        return $user->role === 'branch_manager'
+            || $this->tas()->whereKey($user->id)->exists();
+    }
 }
