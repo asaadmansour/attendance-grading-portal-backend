@@ -2,18 +2,17 @@
 
 namespace Tests\Feature;
 
-// use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
 class ExampleTest extends TestCase
 {
     /**
-     * A basic test example.
+     * Simple health check test for the API.
      */
-    public function test_the_application_returns_a_successful_response(): void
+    public function test_ping_route_returns_ok(): void
     {
-        $response = $this->get('/');
+        $response = $this->getJson('/api/v1/ping');
 
-        $response->assertStatus(200);
+        $response->assertOk();
     }
 }
