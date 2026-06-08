@@ -20,7 +20,15 @@ class AuthController extends Controller
             return response()->json(['message' => 'Account expired'], 403);
         }
         $token = $user->createToken('auth-token')->plainTextToken;
-        return response()->json(['token' => $token]);
+        return response()->json([
+            'token' => $token,
+            'user' => [
+                'id' => $user->id,
+                'name' => $user->name,
+                'email' => $user->email,
+                'role' => $user->role,
+            ],
+        ]);
     }
     public function register(RegisterRequest $request) {
         $user = User::create([

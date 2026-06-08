@@ -2,12 +2,18 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Engagement extends Model
 {
+    use HasFactory;
+
     protected $fillable = [
         'instructor_id',
+        'cohort_id',
         'engagement_type',
         'start_date',
         'end_date',
@@ -23,8 +29,18 @@ class Engagement extends Model
         ];
     }
 
-    public function instructor()
+    public function instructor(): BelongsTo
     {
         return $this->belongsTo(User::class, 'instructor_id');
+    }
+
+    public function cohort(): BelongsTo
+    {
+        return $this->belongsTo(Cohort::class, 'cohort_id');
+    }
+
+    public function sessions(): HasMany
+    {
+        return $this->hasMany(Session::class);
     }
 }
