@@ -35,7 +35,9 @@ class AnnouncementStoreTest extends TestCase
     {
         Sanctum::actingAs(User::factory()->create(['role' => 'branch_manager']));
 
-        $this->postJson('/api/v1/announcements', $this->payload())->assertStatus(201);
+        $this->postJson('/api/v1/announcements', $this->payload(['title' => 'BM notice']))->assertStatus(201);
+
+        $this->assertDatabaseHas('announcements', ['title' => 'BM notice']);
     }
 
     public function test_instructor_denied_when_window_closed(): void
