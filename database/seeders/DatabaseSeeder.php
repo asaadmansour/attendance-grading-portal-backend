@@ -33,5 +33,7 @@ class DatabaseSeeder extends Seeder
             CourseSeeder::class,
             EngagementSeeder::class,
         ]);
+
+        $this->call(AnnouncementSeeder::class);
     }
 }
