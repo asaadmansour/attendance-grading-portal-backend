@@ -8,17 +8,20 @@ return new class extends Migration
 {
     public function up(): void
     {
-        if (!Schema::hasTable('excuse_requests')) {
-            Schema::create('excuse_requests', function (Blueprint $table) {
-                $table->id();
-                $table->foreignId('attendance_id')->constrained('attendances');
-                $table->foreignId('student_id')->constrained('users');
-                $table->text('reason')->nullable();
-                $table->string('status')->default('pending');
-                $table->foreignId('reviewed_by')->nullable()->constrained('users');
-                $table->timestamps();
-            });
-        }
+        Schema::create('excuse_requests', function (Blueprint $table) {
+            $table->id();
+            $table->foreignId('attendance_id')->constrained('attendances')->cascadeOnDelete();
+            $table->foreignId('student_id')->constrained('users')->cascadeOnDelete();
+            $table->text('reason');
+            $table->string('attachment_path')->nullable();
+            $table->enum('status', ['requested', 'approved', 'rejected'])->default('requested');
+            $table->foreignId('reviewed_by')->nullable()->constrained('users')->nullOnDelete();
+            $table->timestamps();
+
+            $table->index('student_id');
+            $table->index('attendance_id');
+            $table->index('status');
+        });
     }
 
     public function down(): void

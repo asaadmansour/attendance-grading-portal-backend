@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasOne;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Attendance extends Model
 {
@@ -37,5 +38,10 @@ class Attendance extends Model
     public function excuseRequest(): HasOne
     {
         return $this->hasOne(ExcuseRequest::class);
+    }
+
+    public function excuseRequests(): HasMany
+    {
+        return $this->hasMany(ExcuseRequest::class);
     }
 }
