@@ -2,6 +2,8 @@
 
 namespace App\Providers;
 
+use App\Support\Engagement\EngagementWindow;
+use App\Support\Engagement\NullEngagementWindow;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
@@ -12,8 +14,8 @@ class AppServiceProvider extends ServiceProvider
     public function register(): void
     {
         $this->app->bind(
-            \App\Support\Engagement\EngagementWindow::class,
-            \App\Support\Engagement\NullEngagementWindow::class,
+            EngagementWindow::class,
+            NullEngagementWindow::class,
         );
     }
 

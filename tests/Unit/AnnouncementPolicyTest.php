@@ -32,7 +32,8 @@ class AnnouncementPolicyTest extends TestCase
 
     public function test_instructor_allowed_when_window_open(): void
     {
-        $this->app->bind(EngagementWindow::class, fn () => new class implements EngagementWindow {
+        $this->app->bind(EngagementWindow::class, fn () => new class implements EngagementWindow
+        {
             public function instructorHasActiveWindow(User $instructor): bool
             {
                 return true;
