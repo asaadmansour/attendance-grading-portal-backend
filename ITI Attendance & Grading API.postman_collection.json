@@ -281,6 +281,34 @@
       ]
     },
     {
+      "name": "Tracks",
+      "item": [
+        {
+          "name": "Get all Tracks",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/tracks",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "tracks"
+              ]
+            },
+            "description": "Branch Manager or Track Admin. Lists the branch's tracks (id, name) — used by the cohort-create track picker."
+          },
+          "response": []
+        }
+      ]
+    },
+    {
       "name": "Cohorts",
       "item": [
         {
@@ -352,6 +380,70 @@
               ]
             },
             "description": "BM or the assigned Track Admin. The cohort's enrolled students (id, name, email), each with the lab group they sit in."
+          },
+          "response": []
+        },
+        {
+          "name": "Enroll Students",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"student_ids\": [\n    4,\n    5\n  ]\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/cohorts/1/students",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "cohorts",
+                "1",
+                "students"
+              ]
+            },
+            "description": "BM or assigned Track Admin. Enrolls one or more students (role=student) into the cohort. Idempotent — re-enrolling an already-enrolled student is a no-op. Returns the updated roster."
+          },
+          "response": []
+        },
+        {
+          "name": "Unenroll Student",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/cohorts/1/students/4",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "cohorts",
+                "1",
+                "students",
+                "4"
+              ]
+            },
+            "description": "BM or assigned Track Admin. Removes a student from the cohort."
           },
           "response": []
         },
@@ -1309,6 +1401,98 @@
               ]
             },
             "description": "Instructor or Track Admin. Soft-deletes the note."
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Student Tags",
+      "item": [
+        {
+          "name": "Get Student Tags",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/students/4/tags",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "students",
+                "4",
+                "tags"
+              ]
+            },
+            "description": "Instructor or Track Admin. Tags applied to a given student."
+          },
+          "response": []
+        },
+        {
+          "name": "Add Student Tag",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"tag_id\": 1,\n  \"course_id\": 1\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/students/4/tags",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "students",
+                "4",
+                "tags"
+              ]
+            },
+            "description": "Instructor or Track Admin. Attaches a tag to the student for a course. tag_id and course_id are required; a tag is unique per student + course."
+          },
+          "response": []
+        },
+        {
+          "name": "Remove Student Tag",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/student-tags/1",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "student-tags",
+                "1"
+              ]
+            },
+            "description": "Instructor or Track Admin. Removes a student tag (by student_tag id)."
           },
           "response": []
         }
