@@ -1,0 +1,27 @@
+<?php
+
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
+
+return new class extends Migration
+{
+    /**
+     * Run the migrations.
+     */
+    public function up(): void
+    {
+        Schema::table('users', function (Blueprint $table) {
+            $table->string('compensation_type')->nullable()->after('role');
+            $table->decimal('hourly_rate', 8, 2)->default(0)->after('compensation_type');
+            $table->decimal('monthly_salary', 10, 2)->default(0)->after('hourly_rate');
+        });
+    }
+
+    public function down(): void
+    {
+        Schema::table('users', function (Blueprint $table) {
+            $table->dropColumn(['compensation_type', 'hourly_rate', 'monthly_salary']);
+        });
+    }
+};

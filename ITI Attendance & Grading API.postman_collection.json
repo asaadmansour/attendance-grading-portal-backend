@@ -1588,44 +1588,7 @@
       "name": "Billing",
       "item": [
         {
-          "name": "Run Billing",
-          "request": {
-            "method": "POST",
-            "header": [
-              {
-                "key": "Accept",
-                "value": "application/json"
-              },
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              }
-            ],
-            "body": {
-              "mode": "raw",
-              "raw": "{\n  \"cohort_id\": 1\n}",
-              "options": {
-                "raw": {
-                  "language": "json"
-                }
-              }
-            },
-            "url": {
-              "raw": "{{base_url}}/billing/run",
-              "host": [
-                "{{base_url}}"
-              ],
-              "path": [
-                "billing",
-                "run"
-              ]
-            },
-            "description": "Branch Manager only. Recomputes billing lines from the delivered-session schedule (external = hours x rate, internal also gets their salary). cohort_id is optional; remove the body to bill every cohort."
-          },
-          "response": []
-        },
-        {
-          "name": "Billing Rollup",
+          "name": "Get Billing Records",
           "request": {
             "method": "GET",
             "header": [
@@ -1635,16 +1598,40 @@
               }
             ],
             "url": {
-              "raw": "{{base_url}}/billing/rollup",
+              "raw": "{{base_url}}/billing?page=1&per_page=15",
               "host": [
                 "{{base_url}}"
               ],
               "path": [
-                "billing",
-                "rollup"
+                "billing"
+              ],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "1"
+                },
+                {
+                  "key": "per_page",
+                  "value": "15"
+                },
+                {
+                  "key": "cohort_id",
+                  "value": "1",
+                  "disabled": true
+                },
+                {
+                  "key": "instructor_type",
+                  "value": "external",
+                  "disabled": true
+                },
+                {
+                  "key": "status",
+                  "value": "pending",
+                  "disabled": true
+                }
               ]
             },
-            "description": "Branch Manager only. The consolidated bill split into internal and external, plus every line."
+            "description": "Branch Manager only. Paginated billing records auto-generated from engagements. Filter by cohort_id, instructor_type (external/internal), or status (pending/forwarded)."
           },
           "response": []
         },
@@ -1668,7 +1655,7 @@
                 "forward"
               ]
             },
-            "description": "Branch Manager only. Sends all pending lines to central accounting and marks them forwarded."
+            "description": "Branch Manager only. Marks all pending billing records as forwarded to central accounting."
           },
           "response": []
         }
