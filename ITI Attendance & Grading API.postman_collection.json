@@ -270,6 +270,31 @@
           "response": []
         },
         {
+          "name": "Get Cohort Students",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/cohorts/1/students",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "cohorts",
+                "1",
+                "students"
+              ]
+            },
+            "description": "BM or the assigned Track Admin. The cohort's enrolled students (id, name, email), each with the lab group they sit in."
+          },
+          "response": []
+        },
+        {
           "name": "Add Cohort",
           "request": {
             "method": "POST",
@@ -785,7 +810,7 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"instructor_id\": 3,\n  \"engagement_type\": \"lab\",\n  \"start_date\": \"2026-06-01\",\n  \"end_date\": \"2026-09-01\",\n  \"scheduled_hours_per_session\": 3\n}",
+              "raw": "{\n  \"instructor_id\": 3,\n  \"cohort_id\": 1,\n  \"engagement_type\": \"lab\",\n  \"start_date\": \"2026-06-01\",\n  \"end_date\": \"2026-09-01\",\n  \"scheduled_hours_per_session\": 3\n}",
               "options": {
                 "raw": {
                   "language": "json"
@@ -1493,6 +1518,96 @@
               ]
             },
             "description": "Reviewer (TA). action is approved or rejected."
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Billing",
+      "item": [
+        {
+          "name": "Run Billing",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"cohort_id\": 1\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/billing/run",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "billing",
+                "run"
+              ]
+            },
+            "description": "Branch Manager only. Recomputes billing lines from the delivered-session schedule (external = hours x rate, internal also gets their salary). cohort_id is optional; remove the body to bill every cohort."
+          },
+          "response": []
+        },
+        {
+          "name": "Billing Rollup",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/billing/rollup",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "billing",
+                "rollup"
+              ]
+            },
+            "description": "Branch Manager only. The consolidated bill split into internal and external, plus every line."
+          },
+          "response": []
+        },
+        {
+          "name": "Forward to Accounting",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/billing/forward",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "billing",
+                "forward"
+              ]
+            },
+            "description": "Branch Manager only. Sends all pending lines to central accounting and marks them forwarded."
           },
           "response": []
         }

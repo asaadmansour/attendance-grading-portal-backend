@@ -27,6 +27,9 @@ class User extends Authenticatable
         'expires_at',
         'password',
         'created_by',
+        'compensation_type',
+        'hourly_rate',
+        'monthly_salary',
     ];
 
     /**
@@ -38,6 +41,9 @@ class User extends Authenticatable
         'password',
         'expires_at',
         'remember_token',
+        'compensation_type',
+        'hourly_rate',
+        'monthly_salary',
     ];
 
     /**
@@ -65,12 +71,19 @@ class User extends Authenticatable
         return $this->hasMany(Announcement::class, 'author_id');
     }
 
+    public function billingRecords(): HasMany
+    {
+        return $this->hasMany(BillingRecord::class);
+    }
+
     protected function casts(): array
     {
         return [
             'email_verified_at' => 'datetime',
             'expires_at' => 'datetime',
             'password' => 'hashed',
+            'hourly_rate' => 'decimal:2',
+            'monthly_salary' => 'decimal:2',
         ];
     }
 }
