@@ -16,11 +16,17 @@ class UserController extends Controller
         $user = $request->user();
 
         $query = match ($user->role) {
-            'branch_manager' => User::where('created_by', $user->id)
-                ->orWhereIn('created_by', $user->createdUsers()->pluck('id')),
+            'branch_manager' => User::where(fn ($q) => $q
+                ->where('created_by', $user->id)
+                ->orWhereIn('created_by', $user->createdUsers()->pluck('id'))),
             'track_admin' => User::where('created_by', $user->id),
             default => User::whereRaw('1 = 0'),
         };
+
+        // optional ?role= filter for the cohort-setup pickers
+        if ($role = $request->query('role')) {
+            $query->where('role', $role);
+        }
 
         return response()->json($query->paginate($request->input('per_page', 15)));
     }

@@ -16,6 +16,8 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::get('/cohorts', [CohortController::class, 'index']);
         Route::get('/cohorts/{cohort}', [CohortController::class, 'show']);
         Route::get('/cohorts/{cohort}/students', [CohortController::class, 'students']);
+        Route::post('/cohorts/{cohort}/students', [CohortController::class, 'enroll']);
+        Route::delete('/cohorts/{cohort}/students/{student}', [CohortController::class, 'unenroll']);
 
         Route::get('/cohorts/{cohort}/courses', [CourseController::class, 'index']);
         Route::post('/cohorts/{cohort}/courses', [CourseController::class, 'store']);
