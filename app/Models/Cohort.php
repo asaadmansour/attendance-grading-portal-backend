@@ -39,6 +39,13 @@ class Cohort extends Model
         return $this->belongsToMany(User::class, 'cohort_admins')->withTimestamps();
     }
 
+    // students enrolled in this cohort, with the lab group they sit in
+    public function students()
+    {
+        return $this->belongsToMany(User::class, 'enrollments', 'cohort_id', 'student_id')
+            ->withPivot('lab_group_id');
+    }
+
     // BM manages every cohort; a track admin only the ones they're assigned to
     public function isManagedBy(User $user): bool
     {

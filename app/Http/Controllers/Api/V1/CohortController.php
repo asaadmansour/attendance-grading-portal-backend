@@ -29,6 +29,14 @@ class CohortController extends Controller
         return $this->ok($cohort->load('track', 'tas', 'courses.components', 'labGroups.instructor'));
     }
 
+    // the cohort's enrolled students, each with the lab group they belong to
+    public function students(Request $request, Cohort $cohort)
+    {
+        abort_unless($cohort->isManagedBy($request->user()), 403, 'Forbidden');
+
+        return $this->ok($cohort->students()->get(['users.id', 'users.name', 'users.email']));
+    }
+
     public function store(StoreCohortRequest $request)
     {
         $cohort = Cohort::create([

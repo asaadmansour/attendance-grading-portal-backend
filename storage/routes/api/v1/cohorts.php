@@ -15,6 +15,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::middleware('role:branch_manager,track_admin')->group(function () {
         Route::get('/cohorts', [CohortController::class, 'index']);
         Route::get('/cohorts/{cohort}', [CohortController::class, 'show']);
+        Route::get('/cohorts/{cohort}/students', [CohortController::class, 'students']);
 
         Route::get('/cohorts/{cohort}/courses', [CourseController::class, 'index']);
         Route::post('/cohorts/{cohort}/courses', [CourseController::class, 'store']);

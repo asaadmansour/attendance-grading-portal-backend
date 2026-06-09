@@ -12,6 +12,7 @@ class UpdateEngagementRequest extends FormRequest
         return [
             // only people who actually teach can be booked: instructors and TAs
             'instructor_id' => ['sometimes', Rule::exists('users', 'id')->whereIn('role', ['instructor', 'track_admin'])],
+            'cohort_id' => 'sometimes|integer|exists:cohorts,id',
             'engagement_type' => 'sometimes|in:lecture,lab,business',
             'start_date' => 'sometimes|date',
             'end_date' => 'sometimes|date',
