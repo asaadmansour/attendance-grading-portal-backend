@@ -147,7 +147,7 @@ class AttendanceController extends Controller
                     ['balance' => 250]
                 );
 
-                $alreadyProcessed = \DB::table('attendance_reconciliations')
+                $alreadyProcessed = DB::table('attendance_reconciliations')
                     ->where('session_id', $session->id)
                     ->where('student_id', $studentId)
                     ->exists();
@@ -155,7 +155,7 @@ class AttendanceController extends Controller
                 if (!$alreadyProcessed) {
                     $ledger->deduct($deduction);
 
-                    \DB::table('attendance_reconciliations')->insert([
+                    DB::table('attendance_reconciliations')->insert([
                         'session_id' => $session->id,
                         'student_id' => $studentId,
                         'created_at' => now(),
