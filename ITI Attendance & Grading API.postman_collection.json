@@ -189,6 +189,67 @@
       ]
     },
     {
+      "name": "Users",
+      "item": [
+        {
+          "name": "Me",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/me",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "me"
+              ]
+            },
+            "description": "Any authenticated user. Returns the current user's id, name, email, and role."
+          },
+          "response": []
+        },
+        {
+          "name": "Get all Users",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/users?page=1&per_page=15",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "users"
+              ],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "1"
+                },
+                {
+                  "key": "per_page",
+                  "value": "15"
+                }
+              ]
+            },
+            "description": "Branch Manager or Track Admin. Paginated. BM sees track admins + their created users; TA sees only their created instructors/students."
+          },
+          "response": []
+        }
+      ]
+    },
+    {
       "name": "System",
       "item": [
         {
