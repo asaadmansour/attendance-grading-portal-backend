@@ -1857,6 +1857,126 @@
           "response": []
         }
       ]
+    },
+    {
+      "name": "Submissions",
+      "item": [
+        {
+          "name": "Submit Assignment",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"url\": \"https://github.com/student/mini-project\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/assignments/1/submissions",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "assignments",
+                "1",
+                "submissions"
+              ]
+            },
+            "description": "Student only. Submit a URL (JSON body shown) or a file — for a file, switch the body to form-data with a 'file' field (pdf/doc/docx/zip/png/jpg, max 10 MB). Captures submitted_at server-side; resubmitting the same assignment updates the existing submission."
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Student Portal",
+      "item": [
+        {
+          "name": "My Attendance",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/me/attendance",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "me",
+                "attendance"
+              ]
+            },
+            "description": "Authenticated user (student-facing). The caller's own attendance: ledger balance + per-session records."
+          },
+          "response": []
+        },
+        {
+          "name": "My Grades",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/me/grades",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "me",
+                "grades"
+              ]
+            },
+            "description": "Authenticated user (student-facing). The caller's own grades: per-course normalized totals + grand total (ledger + course scores), via the grading service."
+          },
+          "response": []
+        },
+        {
+          "name": "My Progress",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/me/progress",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "me",
+                "progress"
+              ]
+            },
+            "description": "Authenticated user (student-facing). The caller's own progress: attendance counts + ledger balance + grades grand total."
+          },
+          "response": []
+        }
+      ]
     }
   ]
 }
