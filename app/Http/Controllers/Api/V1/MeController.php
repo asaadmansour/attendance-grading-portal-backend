@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api\V1;
 use App\Http\Controllers\Controller;
 use App\Models\Attendance;
 use App\Models\AttendanceLedger;
+use App\Services\GradingService;
 use Illuminate\Http\Request;
 
 class MeController extends Controller
@@ -21,14 +22,12 @@ class MeController extends Controller
         ]);
     }
 
-    // Grades come from Muhanad's grading engine (GRD-*), not yet in this repo —
-    // expose the contract now, empty until course_scores lands.
-    public function grades(Request $request)
+    public function grades(Request $request, GradingService $grading)
     {
-        return $this->ok(['courses' => []]);
+        return $this->ok($grading->grandTotalFor($request->user()));
     }
 
-    public function progress(Request $request)
+    public function progress(Request $request, GradingService $grading)
     {
         $studentId = $request->user()->id;
 
@@ -37,6 +36,8 @@ class MeController extends Controller
             ->groupBy('status')
             ->pluck('total', 'status');
 
+        $grades = $grading->grandTotalFor($request->user());
+
         return $this->ok([
             'attendance' => [
                 'present' => (int) ($counts['present'] ?? 0),
@@ -44,7 +45,10 @@ class MeController extends Controller
                 'excused' => (int) ($counts['excused'] ?? 0),
                 'ledger_balance' => $this->ledgerBalance($studentId),
             ],
-            'grades' => null,
+            'grades' => [
+                'courses' => $grades['courses'],
+                'grand_total' => $grades['grand_total'],
+            ],
         ]);
     }
 
