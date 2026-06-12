@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\Models\User;
 use App\Models\ComponentGrade;
 use App\Models\CourseComponent;
+use App\Models\Submission;
 use App\Http\Requests\StoreComponentGradeRequest;
 use App\Http\Requests\UpdateComponentGradeRequest;
 use App\Services\GradingService;
@@ -35,8 +36,10 @@ class ComponentGradeController extends Controller
 
         abort_if($data['raw_score'] > $component->raw_max, 422, 'raw_score exceeds the component maximum.');
 
+        $effectiveScore = $this->applyLatePenalty($data['raw_score'], $data['submission_id'] ?? null, $grading);
+
         $normalized = $grading->normalize(
-            $data['raw_score'],
+            $effectiveScore,
             $component->raw_max,
             $component->weight
         );
@@ -79,12 +82,15 @@ class ComponentGradeController extends Controller
         );
 
         $component = CourseComponent::findOrFail($grade->course_component_id);
-        $rawScore  = $request->validated()['raw_score'];
+        $data      = $request->validated();
+        $rawScore  = $data['raw_score'];
 
         abort_if($rawScore > $component->raw_max, 422, 'raw_score exceeds the component maximum.');
 
+        $effectiveScore = $this->applyLatePenalty($rawScore, $data['submission_id'] ?? null, $grading);
+
         $grade->raw_score        = $rawScore;
-        $grade->normalized_score = $grading->normalize($rawScore, $component->raw_max, $component->weight);
+        $grade->normalized_score = $grading->normalize($effectiveScore, $component->raw_max, $component->weight);
         $grade->save();
 
         return response()->json(['data' => $grade], 200);
@@ -96,5 +102,31 @@ class ComponentGradeController extends Controller
     public function destroy(string $id)
     {
         //
+    }
+
+    /**
+     * Resolve the score to normalize, applying a late penalty only when the
+     * grade is tied to a submission that had a real deadline.
+     *
+     *  - No submission_id (exam/lecture, no deliverable) → raw score as-is.
+     *  - Submission exists but its assignment has no due_at → raw score as-is.
+     *  - Submission with a due_at → penalty applied via GradingService.
+     *
+     * Read-only on submissions/assignments.
+     */
+    private function applyLatePenalty(float $rawScore, ?int $submissionId, GradingService $grading): float
+    {
+        if ($submissionId === null) {
+            return $rawScore;
+        }
+
+        $submission = Submission::with('assignment')->findOrFail($submissionId);
+        $dueAt      = $submission->assignment?->due_at;
+
+        if ($dueAt === null) {
+            return $rawScore;
+        }
+
+        return $grading->latePenalty($rawScore, $dueAt, $submission->submitted_at);
     }
 }

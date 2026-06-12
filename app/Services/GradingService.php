@@ -5,6 +5,7 @@ namespace App\Services;
 use App\Models\User;
 use App\Models\AttendanceLedger;
 use App\Models\ComponentGrade;
+use Carbon\Carbon;
 
 class GradingService
 {
@@ -16,8 +17,6 @@ class GradingService
 
     public function grandTotalFor(User $student): array
     {
-        // The ledger has one row per student, keyed by student_id (not by its own id).
-        // A student with no ledger row yet has had no deductions → full starting balance.
         $ledgerBalance = (int) (AttendanceLedger::where('student_id', $student->id)->value('balance') ?? 250);
 
         $grades = ComponentGrade::with('courseComponent.course')->where('student_id', $student->id)->get();
@@ -42,5 +41,16 @@ class GradingService
             'courses'        => $courses,
             'grand_total'    => round($ledgerBalance + $coursesTotal, 2),
         ];
+    }
+
+    public function latePenalty(float $score, Carbon $dueDate, Carbon $submittedAt): float
+    {
+        if ($submittedAt->lessThanOrEqualTo($dueDate)) {
+            return $score;              
+        }
+        $daysLate = $dueDate->diffInDays($submittedAt);
+        $daysLate = min($daysLate, 4); 
+        $penalty = $score * $daysLate * 0.25;
+        return $score - $penalty;
     }
 }

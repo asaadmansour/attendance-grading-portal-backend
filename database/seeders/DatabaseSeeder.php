@@ -42,5 +42,9 @@ class DatabaseSeeder extends Seeder
         $this->call(StudentTagSeeder::class);
         $this->call(AttendanceSeeder::class);
         $this->call(AssignmentSeeder::class);
+
+        // Grading domain (must run after course components exist).
+        $this->call(ComponentGradeSeeder::class);
+        $this->call(GradeOverrideSeeder::class);
     }
 }

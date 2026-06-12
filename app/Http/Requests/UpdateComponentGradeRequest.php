@@ -27,6 +27,7 @@ class UpdateComponentGradeRequest extends FormRequest
     {
         return [
             'raw_score' => 'required|numeric|min:0',
+            'submission_id' => 'nullable|exists:submissions,id',
         ];
     }
 }
