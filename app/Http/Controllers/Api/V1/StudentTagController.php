@@ -17,9 +17,7 @@ class StudentTagController extends Controller
     {
         $studentUser = User::findOrFail($student);
         $studentTags = StudentTag::with(['student','tag','course','assignedBy'])->where('student_id',$studentUser->id)->get();
-        return response()->json([
-            'data'=>$studentTags
-        ],200);      
+        return $this->ok($studentTags);
     }
 
     /**
@@ -33,7 +31,7 @@ class StudentTagController extends Controller
         $studentTag->assigned_by = auth()->id();
         $studentTag->save();
 
-        return response()->json(['data' => $studentTag], 201);
+        return $this->ok($studentTag, 'Tag assigned', 201);
     }
 
     /**
@@ -43,6 +41,6 @@ class StudentTagController extends Controller
     {
         $studentTag = StudentTag::findOrFail($id);
         $studentTag->delete();
-        return response()->json(['data' => 'Deleted successfully'], 200);
+        return $this->ok(null, 'Tag removed');
     }
 }

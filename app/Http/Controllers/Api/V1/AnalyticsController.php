@@ -12,26 +12,20 @@ class AnalyticsController extends Controller
     {
         $cohort = Cohort::findOrFail($cohort);
 
-        return response()->json([
-            'data' => $analytics->atRiskStudents($cohort->id),
-        ], 200);
+        return $this->ok($analytics->atRiskStudents($cohort->id));
     }
 
     public function gradeDistribution(string $cohort, AnalyticsService $analytics)
     {
         $cohort = Cohort::findOrFail($cohort);
 
-        return response()->json([
-            'data' => $analytics->gradeDistribution($cohort->id),
-        ], 200);
+        return $this->ok($analytics->gradeDistribution($cohort->id));
     }
 
     public function submissionStatus(string $cohort, AnalyticsService $analytics)
     {
         $cohort = Cohort::findOrFail($cohort);
 
-        return response()->json([
-            'data' => $analytics->submissionStatus($cohort->id),
-        ], 200);
+        return $this->ok($analytics->submissionStatus($cohort->id));
     }
 }

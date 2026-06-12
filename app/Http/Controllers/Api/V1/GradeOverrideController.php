@@ -37,7 +37,7 @@ class GradeOverrideController extends Controller
             return $newOverride;
         });
 
-        return response()->json(['data' => $override], 201);
+        return $this->ok($override, 'Grade overridden', 201);
     }
 
     /**
@@ -47,9 +47,7 @@ class GradeOverrideController extends Controller
     {
         $componentGrade = ComponentGrade::findOrFail($grade);
         $audit = GradeOverride::with(['componentGrade','overriddenBy'])->where('component_grade_id' , $componentGrade->id)->get();
-        return response()->json([
-            'data'=>$audit
-        ],200); 
+        return $this->ok($audit);
     }
 
 }

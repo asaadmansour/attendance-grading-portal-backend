@@ -20,9 +20,7 @@ class ComponentGradeController extends Controller
     {
         $studentUser = User::findOrFail($student);
         $studentGrades = ComponentGrade::with(['student','courseComponent','enteredBy'])->where('student_id',$studentUser->id)->get();
-        return response()->json([
-            'data'=>$studentGrades
-        ],200); 
+        return $this->ok($studentGrades);
     }
 
     /**
@@ -53,7 +51,7 @@ class ComponentGradeController extends Controller
         $grade->entered_by= auth()->id();
         $grade->save();
 
-        return response()->json(['data' => $grade], 201);
+        return $this->ok($grade, 'Grade recorded', 201);
     }
 
     /**
@@ -93,7 +91,7 @@ class ComponentGradeController extends Controller
         $grade->normalized_score = $grading->normalize($effectiveScore, $component->raw_max, $component->weight);
         $grade->save();
 
-        return response()->json(['data' => $grade], 200);
+        return $this->ok($grade, 'Grade updated');
     }
 
     /**

@@ -19,12 +19,10 @@ class StudentGradesController extends Controller
     {
         $studentUser = User::findOrFail($student);
         if (auth()->user()->role === 'student' && auth()->id() !== $studentUser->id) {
-            return response()->json([
-                'error' => ['code' => 'FORBIDDEN', 'message' => 'You can only view your own grades']
-            ], 403);
+            return $this->fail('You can only view your own grades', 403);
         }
         $result = $grading->grandTotalFor($studentUser);
-        return response()->json(['data' => $result], 200);
+        return $this->ok($result);
     }
 
     

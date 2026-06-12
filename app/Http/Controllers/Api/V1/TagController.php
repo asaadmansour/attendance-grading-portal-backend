@@ -16,9 +16,7 @@ class TagController extends Controller
     public function index()
     {
         $tags = Tag::all();
-        return response()->json([
-            'data'=>$tags
-        ],200);
+        return $this->ok($tags);
     }
 
     /**
@@ -27,9 +25,7 @@ class TagController extends Controller
     public function store(StoreTagRequest $request)
     {
         $tag = Tag::create($request->validated());
-        return response()->json([
-            'data'=>$tag
-        ],201);
+        return $this->ok($tag, 'Tag created', 201);
     }
 
     /**
@@ -38,11 +34,8 @@ class TagController extends Controller
     public function show(string $id)
     {
         $tag = Tag::findOrFail($id);
-        
 
-        return response()->json([
-            'data'=>$tag
-        ],200);
+        return $this->ok($tag);
     }
 
     /**
@@ -53,9 +46,7 @@ class TagController extends Controller
         $tag = Tag::findOrFail($id);
         
         $tag->update($request->validated());
-        return response()->json([
-            'data'=>$tag
-        ],200);
+        return $this->ok($tag, 'Tag updated');
     }
 
     /**
@@ -66,9 +57,6 @@ class TagController extends Controller
         $tag = Tag::findOrFail($id);
         
         $tag->delete();
-        return response()->json([
-            'data'   => 'Deleted successfully',
-            'status' => 'success'
-        ],200);
+        return $this->ok(null, 'Tag deleted');
     }
 }
