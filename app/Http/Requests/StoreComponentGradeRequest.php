@@ -32,6 +32,7 @@ class StoreComponentGradeRequest extends FormRequest
             ],
             'student_id'=> 'required|exists:users,id',
             'raw_score' => 'required|numeric|min:0',
+            'submission_id' => 'nullable|exists:submissions,id',
         ];
     }
 }
