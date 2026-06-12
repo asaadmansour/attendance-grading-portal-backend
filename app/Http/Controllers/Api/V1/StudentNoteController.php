@@ -15,9 +15,7 @@ class StudentNoteController extends Controller
     public function index(string $id)
     {
         $notes = StudentNote::with(['student', 'author'])->where('student_id', $id)->get();
-        return response()->json([
-            'data'=>$notes
-        ],200);
+        return $this->ok($notes);
     }
 
     /**
@@ -32,15 +30,15 @@ class StudentNoteController extends Controller
         ]);
         $note->author_id = auth()->id();
         $note->save();
-    
-        return response()->json(['data' => $note], 201);
+
+        return $this->ok($note, 'Note created', 201);
     }
 
     
     public function destroy(string $id)
     {
         $note = StudentNote::findOrFail($id);
-        $note->delete(); 
-        return response()->json(['data' => 'Deleted successfully'], 200);
+        $note->delete();
+        return $this->ok(null, 'Note deleted');
     }
 }
