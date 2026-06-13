@@ -5,10 +5,12 @@ namespace App\Http\Controllers\Api\V1;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreEngagementRequest;
 use App\Http\Requests\UpdateEngagementRequest;
+use App\Models\BillingRecord;
 use App\Models\Engagement;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\DB;
 
 class EngagementController extends Controller
 {
@@ -33,7 +35,11 @@ class EngagementController extends Controller
 
     public function store(StoreEngagementRequest $request)
     {
-        $engagement = Engagement::create($request->validated());
+        $engagement = DB::transaction(function () use ($request) {
+            $engagement = Engagement::create($request->validated());
+            $this->syncBilling($engagement);
+            return $engagement;
+        });
 
         return $this->ok($engagement, 'Engagement created', 201);
     }
@@ -42,7 +48,13 @@ class EngagementController extends Controller
     {
         $this->authorizeAccess($request, $engagement);
 
-        $engagement->update($request->validated());
+        DB::transaction(function () use ($request, $engagement) {
+            $engagement->update($request->validated());
+
+            if ($request->hasAny(['instructor_id', 'cohort_id', 'scheduled_hours_per_session'])) {
+                $this->syncBilling($engagement);
+            }
+        });
 
         return $this->ok($engagement, 'Engagement updated');
     }
@@ -67,6 +79,34 @@ class EngagementController extends Controller
             'start' => $start ? Carbon::parse($start)->toDateString() : null,
             'end' => $end ? Carbon::parse($end)->toDateString() : null,
         ]);
+    }
+
+    private function syncBilling(Engagement $engagement): void
+    {
+        $user = $engagement->instructor;
+
+        $totalHours = Engagement::where('instructor_id', $user->id)
+            ->where('cohort_id', $engagement->cohort_id)
+            ->sum('scheduled_hours_per_session');
+
+        $isExternal = $user->compensation_type === 'external';
+
+        $billing = BillingRecord::firstOrNew([
+            'user_id' => $user->id,
+            'cohort_id' => $engagement->cohort_id,
+        ]);
+
+        if ($billing->status === 'forwarded') {
+            return;
+        }
+
+        $billing->fill([
+            'total_delivered_hours' => $totalHours,
+            'hourly_rate' => $user->hourly_rate,
+            'total_amount' => $totalHours * $user->hourly_rate,
+            'instructor_type' => $isExternal ? 'external' : 'internal',
+            'status' => 'pending',
+        ])->save();
     }
 
     // the BM can touch any engagement, a TA only the ones in cohorts they run
