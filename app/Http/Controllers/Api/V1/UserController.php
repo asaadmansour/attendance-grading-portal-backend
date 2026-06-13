@@ -5,7 +5,12 @@ namespace App\Http\Controllers\Api\V1;
 use App\Http\Controllers\Controller;
 use App\Models\User;
 use Illuminate\Http\Request;
+<<<<<<< Updated upstream
 use Illuminate\Validation\Rule;
+=======
+use Illuminate\Support\Facades\Storage;
+use App\Services\FileStorage;
+>>>>>>> Stashed changes
 
 class UserController extends Controller
 {
@@ -34,12 +39,14 @@ class UserController extends Controller
     public function me(Request $request)
     {
         $user = $request->user();
-
         return response()->json([
             'id' => $user->id,
             'name' => $user->name,
             'email' => $user->email,
             'role' => $user->role,
+            'avatar_url' => $user->avatar_path ? Storage::url($user->avatar_path) : null,
+            'branch' => $user->branch,
+            'phone' => $user->phone,
         ]);
     }
 
@@ -84,4 +91,37 @@ class UserController extends Controller
 
         return $this->ok(null, 'User deleted');
     }
+
+    public function updateAvatar(Request $request, FileStorage $storage)
+    {
+        $request->validate([
+            'avatar' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
+        ]);
+
+        $user = $request->user();
+        $file = $request->file('avatar');
+
+        // Delete old avatar if exists
+        if ($user->avatar_path) {
+            Storage::disk('public')->delete($user->avatar_path);
+        }
+
+        // Store new avatar
+        $path = $storage->store($file, 'avatars', 'public');
+        $user->avatar_path = $path;
+        $user->save();
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Avatar updated',
+            'data' => [
+                'avatar_url' => Storage::url($path)
+            ]
+        ]);
+    }
+
+
+
+
+
 }

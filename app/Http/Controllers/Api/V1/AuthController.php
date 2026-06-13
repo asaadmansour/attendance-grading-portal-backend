@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Storage;
 use App\Http\Requests\LoginRequest;
 use App\Http\Requests\RegisterRequest;
 class AuthController extends Controller
@@ -27,8 +28,12 @@ class AuthController extends Controller
                 'name' => $user->name,
                 'email' => $user->email,
                 'role' => $user->role,
+                'avatar_url' => $user->avatar_path ? Storage::url($user->avatar_path) : null,
+                'branch' => $user->branch,
+                'phone' => $user->phone,
             ],
         ]);
+
     }
     public function register(RegisterRequest $request) {
         $user = User::create([
