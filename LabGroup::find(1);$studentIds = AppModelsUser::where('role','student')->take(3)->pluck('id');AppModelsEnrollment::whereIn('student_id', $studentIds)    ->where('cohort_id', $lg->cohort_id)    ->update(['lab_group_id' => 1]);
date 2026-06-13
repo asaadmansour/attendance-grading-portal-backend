@@ -1,0 +1,55 @@
+[90m= [39m[34;4mIlluminate\Database\Eloquent\Collection[39;24m {#8191
+    [34mall[39m: [
+      [34;4mApp\Models\Course[39;24m {#8199
+        [34mid[39m: [35m1[39m,
+        [34mcohort_id[39m: [35m1[39m,
+        [34mname[39m: [32m"[39m[32mLaravel Fundamentals[39m[32m"[39m,
+        [34mtotal_points[39m: [35m100[39m,
+        [34mcreated_at[39m: [32m"[39m[32m2026-06-08 19:22:00[39m[32m"[39m,
+        [34mupdated_at[39m: [32m"[39m[32m2026-06-08 19:22:00[39m[32m"[39m,
+        [34mcomponents[39m: [34;4mIlluminate\Database\Eloquent\Collection[39;24m {#8641
+          [34mall[39m: [
+            [34;4mApp\Models\CourseComponent[39;24m {#8206
+              [34mid[39m: [35m7[39m,
+              [34mcourse_id[39m: [35m1[39m,
+              [34mcomponent_type[39m: [32m"[39m[32mlab[39m[32m"[39m,
+              [34mweight[39m: [32m"[39m[32m40.00[39m[32m"[39m,
+              [34mraw_max[39m: [32m"[39m[32m72.00[39m[32m"[39m,
+              [34mcreated_at[39m: [32m"[39m[32m2026-06-09 17:29:46[39m[32m"[39m,
+              [34mupdated_at[39m: [32m"[39m[32m2026-06-09 17:29:46[39m[32m"[39m,
+            },
+            [34;4mApp\Models\CourseComponent[39;24m {#8642
+              [34mid[39m: [35m8[39m,
+              [34mcourse_id[39m: [35m1[39m,
+              [34mcomponent_type[39m: [32m"[39m[32mexam[39m[32m"[39m,
+              [34mweight[39m: [32m"[39m[32m60.00[39m[32m"[39m,
+              [34mraw_max[39m: [32m"[39m[32m100.00[39m[32m"[39m,
+              [34mcreated_at[39m: [32m"[39m[32m2026-06-09 17:29:46[39m[32m"[39m,
+              [34mupdated_at[39m: [32m"[39m[32m2026-06-09 17:29:46[39m[32m"[39m,
+            },
+          ],
+        },
+      },
+      [34;4mApp\Models\Course[39;24m {#8183
+        [34mid[39m: [35m4[39m,
+        [34mcohort_id[39m: [35m1[39m,
+        [34mname[39m: [32m"[39m[32mWeb[39m[32m"[39m,
+        [34mtotal_points[39m: [35m100[39m,
+        [34mcreated_at[39m: [32m"[39m[32m2026-06-09 18:13:24[39m[32m"[39m,
+        [34mupdated_at[39m: [32m"[39m[32m2026-06-09 18:13:24[39m[32m"[39m,
+        [34mcomponents[39m: [34;4mIlluminate\Database\Eloquent\Collection[39;24m {#8204
+          [34mall[39m: [
+            [34;4mApp\Models\CourseComponent[39;24m {#8643
+              [34mid[39m: [35m10[39m,
+              [34mcourse_id[39m: [35m4[39m,
+              [34mcomponent_type[39m: [32m"[39m[32mexam[39m[32m"[39m,
+              [34mweight[39m: [32m"[39m[32m100.00[39m[32m"[39m,
+              [34mraw_max[39m: [32m"[39m[32m100.00[39m[32m"[39m,
+              [34mcreated_at[39m: [32m"[39m[32m2026-06-09 18:13:25[39m[32m"[39m,
+              [34mupdated_at[39m: [32m"[39m[32m2026-06-09 18:13:25[39m[32m"[39m,
+            },
+          ],
+        },
+      },
+    ],
+  }

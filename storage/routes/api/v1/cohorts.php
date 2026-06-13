@@ -34,5 +34,7 @@ Route::middleware('auth:sanctum')->group(function () {
 
     // an instructor sees the groups they teach (with rosters); a student sees their own
     Route::get('/my/lab-groups', [LabGroupController::class, 'mine'])->middleware('role:instructor');
+    // a single group the instructor teaches, with roster + cohort courses/components (grading board)
+    Route::get('/my/lab-groups/{labGroup}', [LabGroupController::class, 'mineShow'])->middleware('role:instructor');
     Route::get('/my/lab-group', [LabGroupController::class, 'myGroup'])->middleware('role:student');
 });
