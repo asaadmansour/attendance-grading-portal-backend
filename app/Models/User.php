@@ -81,6 +81,11 @@ class User extends Authenticatable
         return $this->hasMany(BillingRecord::class);
     }
 
+    public function setEmailAttribute(string $value)
+    {
+        $this->attributes['email'] = strtolower($value);
+    }
+
     protected function casts(): array
     {
         return [
