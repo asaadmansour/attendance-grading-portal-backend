@@ -32,6 +32,7 @@ class User extends Authenticatable
         'monthly_salary',
         'branch',
         'phone',
+        'avatar_path',
     ];
 
     /**
@@ -83,7 +84,6 @@ class User extends Authenticatable
         return $this->hasMany(BillingRecord::class);
     }
 
-<<<<<<< Updated upstream
     public function setEmailAttribute(string $value)
     {
         $this->attributes['email'] = strtolower($value);
@@ -99,13 +99,4 @@ class User extends Authenticatable
             'monthly_salary' => 'decimal:2',
         ];
     }
-=======
-    protected $casts = [
-        'email_verified_at' => 'datetime',
-        'expires_at' => 'datetime',
-        'password' => 'hashed',
-        'hourly_rate' => 'decimal:2',
-        'monthly_salary' => 'decimal:2',
-    ];
->>>>>>> Stashed changes
 }

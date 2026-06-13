@@ -5,12 +5,9 @@ namespace App\Http\Controllers\Api\V1;
 use App\Http\Controllers\Controller;
 use App\Models\User;
 use Illuminate\Http\Request;
-<<<<<<< Updated upstream
 use Illuminate\Validation\Rule;
-=======
 use Illuminate\Support\Facades\Storage;
 use App\Services\FileStorage;
->>>>>>> Stashed changes
 
 class UserController extends Controller
 {
