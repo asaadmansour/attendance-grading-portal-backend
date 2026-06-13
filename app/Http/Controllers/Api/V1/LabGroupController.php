@@ -76,6 +76,21 @@ class LabGroupController extends Controller
         return $this->ok($groups);
     }
 
+    // a single group the instructor teaches: roster + cohort courses/components (grading board)
+    public function mineShow(Request $request, LabGroup $labGroup)
+    {
+        abort_unless((int) $labGroup->instructor_id === (int) $request->user()->id, 403, 'Forbidden');
+
+        $labGroup->load([
+            'students:id,name,email',
+            'cohort:id,name',
+            'cohort.courses:id,cohort_id,name,total_points',
+            'cohort.courses.components:id,course_id,component_type,weight,raw_max',
+        ]);
+
+        return $this->ok($labGroup);
+    }
+
     // the group this student was placed in
     public function myGroup(Request $request)
     {
