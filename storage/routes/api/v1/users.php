@@ -5,7 +5,6 @@ use Illuminate\Support\Facades\Route;
 
 Route::middleware('auth:sanctum')->group(function () {
     Route::get('/me', [UserController::class, 'me']);
-<<<<<<< Updated upstream
 
     // managers read and manage the accounts under them; the UserPolicy decides which
     // targets each caller may touch (BM → track admins, TA → instructors/students)
@@ -14,10 +13,6 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::patch('/users/{user}', [UserController::class, 'update']);
         Route::delete('/users/{user}', [UserController::class, 'destroy']);
     });
-=======
-    Route::get('/users', [UserController::class, 'index'])
-        ->middleware('role:branch_manager,track_admin');
-    
+
     Route::post('/me/avatar', [UserController::class, 'updateAvatar']);
->>>>>>> Stashed changes
 });
