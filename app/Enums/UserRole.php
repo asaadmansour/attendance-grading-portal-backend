@@ -12,7 +12,8 @@ enum UserRole: string
     public function canCreate(): array
     {
         return match ($this) {
-            self::BranchManager => [self::TrackAdmin],
+            // the BM provisions track admins, and instructors just like a track admin
+            self::BranchManager => [self::TrackAdmin, self::Instructor],
             self::TrackAdmin => [self::Instructor, self::Student],
             default => [],
         };

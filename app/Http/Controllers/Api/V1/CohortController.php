@@ -76,7 +76,8 @@ class CohortController extends Controller
             'created_by' => $request->user()->id,
         ]);
 
-        $cohort->tas()->sync($request->input('ta_ids', []));
+        // a cohort is run by its track's admins
+        $cohort->tas()->sync($cohort->track->admins()->pluck('users.id'));
 
         return $this->ok($cohort->load('tas'), 'Cohort created', 201);
     }
