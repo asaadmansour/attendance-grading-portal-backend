@@ -20,4 +20,10 @@ class Track extends Model
     {
         return $this->hasMany(Cohort::class);
     }
+
+    // the track admins who run this track (and, by inheritance, its cohorts)
+    public function admins()
+    {
+        return $this->belongsToMany(User::class, 'track_admins')->withTimestamps();
+    }
 }

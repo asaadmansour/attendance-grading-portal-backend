@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api\V1;
 use App\Http\Controllers\Controller;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Validation\Rule;
 
 class UserController extends Controller
 {
@@ -43,34 +44,44 @@ class UserController extends Controller
     }
 
     /**
-     * Store a newly created resource in storage.
+     * Update a user the caller manages (BM → track admins, TA → instructors/students).
+     * Role is intentionally immutable here to keep the created-by hierarchy intact.
      */
-    public function store(Request $request)
+    public function update(Request $request, User $user)
     {
-        //
+        $this->authorize('update', $user);
+
+        $data = $request->validate([
+            'name' => 'sometimes|required|string|max:255',
+            'email' => ['sometimes', 'required', 'email', Rule::unique('users', 'email')->ignore($user->id)],
+            'expires_at' => 'sometimes|nullable|date|after:now',
+            'password' => 'sometimes|nullable|string|min:8|confirmed',
+        ]);
+
+        // a blank password field means "leave it unchanged"
+        if (blank($data['password'] ?? null)) {
+            unset($data['password']);
+        }
+
+        $user->update($data);
+
+        return $this->ok([
+            'id' => $user->id,
+            'name' => $user->name,
+            'email' => $user->email,
+            'role' => $user->role,
+        ], 'User updated');
     }
 
     /**
-     * Display the specified resource.
+     * Remove a user the caller manages.
      */
-    public function show(string $id)
+    public function destroy(User $user)
     {
-        //
-    }
+        $this->authorize('delete', $user);
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, string $id)
-    {
-        //
-    }
+        $user->delete();
 
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(string $id)
-    {
-        //
+        return $this->ok(null, 'User deleted');
     }
 }

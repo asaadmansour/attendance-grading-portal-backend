@@ -13,6 +13,7 @@ class AuthServiceProvider extends ServiceProvider
     protected $policies = [
         \App\Models\Session::class => \App\Policies\AttendancePolicy::class,
         \App\Models\ExcuseRequest::class => \App\Policies\ExcusePolicy::class,
+        \App\Models\User::class => \App\Policies\UserPolicy::class,
     ];
 
     public function register(): void
