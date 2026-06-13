@@ -7,20 +7,11 @@ use Illuminate\Support\Facades\Storage;
 
 class FileStorage
 {
-    /**
-     * Store an uploaded file to the given directory on the local disk.
-     * Returns the stored path or null.
-     *
-     * @param  \Illuminate\Http\UploadedFile|null  $file
-     * @param  string  $directory
-     * @return string|null
-     */
-    public function store(?UploadedFile $file, string $directory): ?string
+    public function store(?UploadedFile $file, string $directory, string $disk = 'local'): ?string
     {
         if (! $file) {
             return null;
         }
-
-        return Storage::disk('local')->putFile($directory, $file);
+        return Storage::disk($disk)->putFile($directory, $file);
     }
 }

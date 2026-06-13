@@ -20,10 +20,22 @@ class DatabaseSeeder extends Seeder
             ['Student', 'student@example.com', 'student'],
         ];
 
+        $branchPhone = [
+            'bm@example.com' => ['branch' => 'Cairo Branch', 'phone' => '+20 100 123 4567'],
+            'trackadmin@example.com' => ['branch' => 'Cairo Branch', 'phone' => '+20 100 234 5678'],
+            'instructor@example.com' => ['branch' => 'Cairo Branch', 'phone' => '+20 100 345 6789'],
+            'student@example.com' => ['branch' => 'Cairo Branch', 'phone' => '+20 100 456 7890'],
+        ];
+
         foreach ($users as [$name, $email, $role]) {
             User::firstOrCreate(
                 ['email' => $email],
-                ['name' => $name, 'role' => $role, 'password' => 'password'],
+                [
+                    'name' => $name,
+                    'role' => $role,
+                    'password' => 'password',
+                    ...$branchPhone[$email] ?? [],
+                ],
             );
         }
 
