@@ -33,6 +33,10 @@ class RegisterRequest extends FormRequest
             'role' => ['required', new Enum(UserRole::class)],
             'expires_at' => 'nullable|date|after:now',
             'password' => 'required|string|min:8|confirmed',
+            // BIL-2: external = pure hourly, internal = fixed salary + hourly
+            'compensation_type' => 'nullable|in:internal,external',
+            'hourly_rate' => 'nullable|numeric|min:0|required_with:compensation_type',
+            'monthly_salary' => 'nullable|numeric|min:0',
         ];
     }
 }
