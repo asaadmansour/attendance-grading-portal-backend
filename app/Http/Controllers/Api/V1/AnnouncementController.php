@@ -41,6 +41,7 @@ class AnnouncementController extends Controller
             ->announcements()
             ->create($request->validated());
 
-        return $this->ok($announcement, 'Announcement created', 201);
+        // match index() shape so the client can render the new post without a refresh
+        return $this->ok($announcement->load('author:id,name'), 'Announcement created', 201);
     }
 }
