@@ -100,10 +100,12 @@ class EngagementController extends Controller
             return;
         }
 
+        $rate = $user->hourly_rate ?? 0;
+
         $billing->fill([
             'total_delivered_hours' => $totalHours,
-            'hourly_rate' => $user->hourly_rate,
-            'total_amount' => $totalHours * $user->hourly_rate,
+            'hourly_rate' => $rate,
+            'total_amount' => $totalHours * $rate,
             'instructor_type' => $isExternal ? 'external' : 'internal',
             'status' => 'pending',
         ])->save();
